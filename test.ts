@@ -55,7 +55,6 @@ function Create_sub_menu(Number2: number) {
 }
 let menu2: miniMenu.MenuSprite = null
 let myMenu: miniMenu.MenuSprite = null
-tiles.setCurrentTilemap(tilemap`level1`)
 myMenu = miniMenu.createMenu(
     miniMenu.createMenuItem("0"),
     miniMenu.createMenuItem("1"),
