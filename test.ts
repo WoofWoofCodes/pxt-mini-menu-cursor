@@ -1,19 +1,19 @@
 // Apparently 'right click' on Mac (two finger click on track pad) is actually the wheel button.
 browserEvents.MouseWheel.onEvent(browserEvents.MouseButtonEvent.Pressed, function (x, y) {
-    miniMenu.clickMenuAtPosition(ControllerButton.B, x, y)
+    miniMenu.clickMenuAtPosition(controller.B, x, y)
 })
 browserEvents.MouseLeft.onEvent(browserEvents.MouseButtonEvent.Pressed, function (x, y) {
-    miniMenu.clickMenuAtPosition(ControllerButton.A, x, y)
+    miniMenu.clickMenuAtPosition(controller.A, x, y)
 })
 browserEvents.onWheel(function (dx, dy, dz) {
     if (dy > 0) {
         for (let index = 0; index < dy / 2; index++) {
             // Switch these around to change the scroll direction!
-            miniMenu.scrollUp()
+            miniMenu.scrollMenus(-1)
         }
     } else if (dy < 0) {
         for (let index = 0; index < Math.abs(dy) / 2; index++) {
-            miniMenu.scrollDown()
+            miniMenu.scrollMenus(1)
         }
     }
 })
@@ -21,7 +21,7 @@ browserEvents.onMouseMove(function (x, y) {
     miniMenu.updateMenuPosition(x, y)
 })
 browserEvents.MouseRight.onEvent(browserEvents.MouseButtonEvent.Pressed, function (x, y) {
-    miniMenu.clickMenuAtPosition(ControllerButton.B, x, y)
+    miniMenu.clickMenuAtPosition(controller.B, x, y)
 })
 function Create_sub_menu(Number2: number) {
     menu2 = miniMenu.createMenu(

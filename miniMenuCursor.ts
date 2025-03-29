@@ -1,93 +1,148 @@
 
 namespace miniMenu {
-    
+    let menuCursorX: number
+    let menuCursorY: number
+
     /**
-     * an array of all menu sprites
+     * An array of all menu sprites
      */
     //% block="all menus"
     //% blockId="menu_cursor_all_menus"
     //% group="Cursor"
-    export function allMenus() { // so that I can get the menus even when their sprite type is changed
+    export function allMenus() { // so that I can get the array of menu sprites even if their 'spriteType' has been changed
         return miniMenu._state().sprites
     }
-    
+
     /**
-     * place inside the Browser Events 'On Mouse Move' block with X and Y dragged inside
+     * Updates the selected index of all menu that have button events enabled and the cursor (x/y) is touching or within scroll range of.
+     * To use as intended, place inside the Browser Events 'On Mouse Move' block with X and Y dragged inside
      */
-    //% block="update menu position to cursor $x $y"
+    //% block="update menu position to cursor x $x y $y"
     //% blockId="menu_cursor_update_position"
     //% group="Cursor"
     //% weight=5
     export function updateMenuPosition(x: number, y: number) {
+        menuCursorX = x // used elsewhere
+        menuCursorY = y
         for (let menu of allMenus()) {
             if (!menu.buttonEventsEnabled) continue
-            if (menu.left > x || menu.right < x) continue  
-            if (menu.top - 12 > y || menu.bottom + 12 < y) continue // extra detected space above and below allows for easier scrolling
+            if (menu.left > x || menu.right < x) continue
 
-            let menuTop = menu.top
-            if (menu.title) menuTop += 12
-            if (menu.frame) menuTop += menu.frame.height / 3
-            let posInMenu = Math.floor((y - menuTop + menu.yScroll) / 12)
+            let menuPos = menu.top
+            if (menu.title) menuPos += menu.title.getHeight(menu.titleStyle)
+            if (menu.frame) menuPos += menu.frame.height / 3
+            menuPos += menu.menuStyle.padding
 
-            if (posInMenu > -1 && posInMenu < menu.items.length) {
-                menu.selectedIndex = Math.constrain(posInMenu, 0, menu.items.length - 1)
+            if (menuPos - 12 > y || menu.bottom + 12 < y) continue // extra detected space above and below allows for easier scrolling
+
+            menuPos -= menu.yScroll
+
+            if (menuPos > y) continue // prevents extra detected space from working if the menu has no scroll
+
+            let posInMenu = 0
+            for (let item of menu.items) {
+                menuPos += item.getHeight(menu.selectedStyle)
+                if (menuPos >= y) break
+                posInMenu++
+            }
+
+            if (posInMenu >= 0 && posInMenu < menu.items.length) {
+                menu.selectedIndex = posInMenu
             }
         }
     }
 
     /**
-     * place inside the Browser Events 'On left Mouse Button clicked' block with X and Y dragged inside
+     * Simulates the specified button being pressed for all menus that are touching the cursor and have button events enabled
+     * To use as intended, place inside the Browser Events 'On [ ] Mouse Button clicked' block with X and Y dragged inside, and set the button to whichever button should get pressed when the selected mouse button is pressed
      */
-    //% block="click menu with $button at cursor position $x $y"
+    //% block="click menu with $button at cursor position x $x y $y"
     //% blockId="menu_cursor_click_position"
     //% group="Cursor"
     //% weight=4
-    export function clickMenuAtPosition(button: ControllerButton, x: number, y: number) {
+    export function clickMenuAtPosition(button: controller.Button, x: number, y: number) {
+        menuCursorX = x // used in the scrollMenu function
+        menuCursorY = y
         for (let menu of allMenus()) {
-            if (!menu.buttonEventsEnabled) continue
-            if (menu.left > x || menu.right < x) continue
-            if (menu.top > y || menu.bottom < y) continue 
+            if (!menu.buttonEventsEnabled || menu.left > x || menu.right < x) continue
 
-            let menuTop = menu.top
-            if (menu.title) menuTop += 12
-            if (menu.frame) menuTop += menu.frame.height / 3
-            let posInMenu = Math.floor((y - menuTop + menu.yScroll) / 12)
+            let menuPos = menu.top
+            menuPos += menu.title ? menu.title.getHeight(menu.titleStyle) : 0
+            menuPos += menu.frame ? menu.frame.height / 3 : 0
+            menuPos += menu.menuStyle.padding
+
+            if (menuPos > y || menu.bottom < y) continue
+
+            menuPos -= menu.yScroll
+
+            let posInMenu = 0
+            for (let item of menu.items) {
+                menuPos += item.getHeight(menu.selectedStyle)
+                if (menuPos >= y) break
+                posInMenu++
+            }
 
             if (posInMenu >= 0 && posInMenu < menu.items.length) {
                 menu.selectedIndex = posInMenu
-                pressButton(button)
+                pressMenuButton(menu, button)
             }
         }
     }
 
-    //% block="scroll menus up"
-    //% blockId="menu_cursor_scroll_up"
-    //% group="Cursor"
-    //% weight=3
-    export function scrollUp() {
-        for (let menu of allMenus()) {
-            if (!menu.buttonEventsEnabled) continue
-
-            if (menu.selectedIndex > 0) {
-                menu.selectedIndex--
-            }
-        }
+    enum MenuScroll {
+        Up = -1,
+        Down = 1
     }
 
-    //% block="scroll menus down"
-    //% blockId="menu_cursor_scroll_down"
+    /**
+     * Change the selected position of all menus that are touching the cursor and have button events enabled
+     */
+    //% block="scroll menus $dir"
+    //% blockId="menu_cursor_scroll"
     //% group="Cursor"
     //% weight=2
-    export function scrollDown() {
+    export function scrollMenus(dir: MenuScroll) {
         for (let menu of allMenus()) {
-            if (!menu.buttonEventsEnabled) continue
+            if (!menu.buttonEventsEnabled || menu.left > menuCursorX || menu.right < menuCursorX || menu.top > menuCursorY || menu.bottom < menuCursorY) continue
 
-            if (menu.selectedIndex < menu.items.length - 1) {
-                menu.selectedIndex++
+            if (menu.selectedIndex + dir < menu.items.length && menu.selectedIndex + dir >= 0) {
+                menu.selectedIndex += dir
             }
         }
     }
 
+    /**
+     * Simulate a button click for all menus that are touching the cursor and have button events enabled
+     */
+    //% block="simulate click of button $button for all valid menus"
+    //% blockId="menu_cursor_all_menus_simulate_click"
+    //% group="Cursor"
+    //% weight=1
+    export function pressAllMenusButton(button: controller.Button) {
+        for (let menu of allMenus()) {
+            if (!menu.buttonEventsEnabled || menu.left > menuCursorX || menu.right < menuCursorX || menu.top > menuCursorY || menu.bottom < menuCursorY) continue
+
+            if (menu.selectedIndex < menu.items.length - 1) {
+                menu.fireButtonEvent(button)
+            }
+        }
+
+    }
+
+    /**
+     * Simulate a button click for the specified menu
+     */
+    //% block="$menu simulate click of button $button"
+    //% blockId="menu_cursor_simulate_menu_click"
+    //% group="Cursor"
+    //% weight=1
+    export function pressMenuButton(menu: MenuSprite, button: controller.Button) {
+        menu.fireButtonEvent(button)
+    }
+
+    /**
+     * Simulate a button click
+     */
     //% block="simulate click of button $button"
     //% blockId="menu_cursor_simulate_click"
     //% group="Cursor"
