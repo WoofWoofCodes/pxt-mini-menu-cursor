@@ -29,8 +29,8 @@ namespace miniMenu {
             if (menu.left > x || menu.right < x) continue
 
             let menuPos = menu.top
-            if (menu.title) menuPos += menu.title.getHeight(menu.titleStyle)
-            if (menu.frame) menuPos += menu.frame.height / 3
+            menuPos += menu.title ? menu.title.getHeight(menu.titleStyle) : 0
+            menuPos += menu.frame ? menu.frame.height / 3 : 0
             menuPos += menu.menuStyle.padding
 
             if (menuPos - 12 > y || menu.bottom + 12 < y) continue // extra detected space above and below allows for easier scrolling
@@ -89,7 +89,7 @@ namespace miniMenu {
         }
     }
 
-    enum MenuScroll {
+    export enum MenuScroll {
         Up = -1,
         Down = 1
     }
@@ -114,7 +114,7 @@ namespace miniMenu {
     /**
      * Simulate a button click for the specified menu
      */
-    //% block="$menu simulate click of button $button"
+    //% block="$menu=variables_get(myMenu) simulate click of button $button"
     //% blockId="menu_cursor_simulate_menu_click"
     //% group="Cursor"
     //% weight=1
