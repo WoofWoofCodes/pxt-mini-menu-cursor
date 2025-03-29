@@ -112,24 +112,6 @@ namespace miniMenu {
     }
 
     /**
-     * Simulate a button click for all menus that are touching the cursor and have button events enabled
-     */
-    //% block="simulate click of button $button for all valid menus"
-    //% blockId="menu_cursor_all_menus_simulate_click"
-    //% group="Cursor"
-    //% weight=1
-    export function pressAllMenusButton(button: controller.Button) {
-        for (let menu of allMenus()) {
-            if (!menu.buttonEventsEnabled || menu.left > menuCursorX || menu.right < menuCursorX || menu.top > menuCursorY || menu.bottom < menuCursorY) continue
-
-            if (menu.selectedIndex < menu.items.length - 1) {
-                menu.fireButtonEvent(button)
-            }
-        }
-
-    }
-
-    /**
      * Simulate a button click for the specified menu
      */
     //% block="$menu simulate click of button $button"
