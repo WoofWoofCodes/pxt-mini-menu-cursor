@@ -23,7 +23,7 @@ browserEvents.onMouseMove(function (x, y) {
 browserEvents.MouseRight.onEvent(browserEvents.MouseButtonEvent.Pressed, function (x, y) {
     miniMenu.clickMenuAtPosition(controller.B, x, y)
 })
-function Create_sub_menu(Number2: number) {
+function Create_sub_menu(num: number) {
     menu2 = miniMenu.createMenu(
         miniMenu.createMenuItem("back"),
         miniMenu.createMenuItem("1"),
@@ -39,7 +39,7 @@ function Create_sub_menu(Number2: number) {
         miniMenu.createMenuItem("11")
     )
     menu2.setDimensions(80, 50)
-    menu2.setTitle("Sub Menu #" + Number2 + ":")
+    menu2.setTitle("Sub Menu #" + num + ":")
     menu2.setPosition(125, 66)
     menu2.onButtonPressed(controller.A, function (selection, selectedIndex) {
         menu2.sayText(selectedIndex, 1000, false)
@@ -54,6 +54,7 @@ function Create_sub_menu(Number2: number) {
     })
 }
 let menu2: miniMenu.MenuSprite = null
+let menu3: miniMenu.MenuSprite = null
 let myMenu: miniMenu.MenuSprite = null
 myMenu = miniMenu.createMenu(
     miniMenu.createMenuItem("0"),
