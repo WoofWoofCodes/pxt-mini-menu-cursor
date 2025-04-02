@@ -63,7 +63,9 @@ namespace miniMenu {
     export function clickMenuAtPosition(button: controller.Button, x: number, y: number) {
         menuCursorX = x // used in the scrollMenu function
         menuCursorY = y
-        for (let menu of allMenus()) {
+        let n = allMenus().length // all this is to prevent instantly clicking a newly created menu
+        for (let i = 0; i < n; i++) {
+            let menu = allMenus()[i]
             if (!menu.buttonEventsEnabled || menu.left > x || menu.right < x) continue
 
             let menuPos = menu.top
