@@ -25,24 +25,27 @@ namespace miniMenu {
         menuCursorX = x // used elsewhere
         menuCursorY = y
         for (let menu of allMenus()) {
+            let xx = x + ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.X) - (scene.screenWidth() / 2)) // adjust position if not relative to camera
+            let yy = y + ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.Y) - (scene.screenHeight() / 2))
+            
             if (!menu.buttonEventsEnabled) continue
-            if (menu.left > x || menu.right < x) continue
+            if (menu.left > xx || menu.right < xx) continue
 
             let menuPos = menu.top
             menuPos += menu.title ? menu.title.getHeight(menu.titleStyle) : 0
             menuPos += menu.frame ? menu.frame.height / 3 : 0
             menuPos += menu.menuStyle.padding
 
-            if (menuPos - 12 > y || menu.bottom + 12 < y) continue // extra detected space above and below allows for easier scrolling
+            if (menuPos - 12 > yy || menu.bottom + 12 < yy) continue // extra detected space above and below allows for easier scrolling
 
             menuPos -= menu.yScroll
 
-            if (menuPos > y) continue // prevents extra detected space from working if the menu has no scroll
+            if (menuPos > yy) continue // prevents extra detected space from working if the menu has no scroll
 
             let posInMenu = 0
             for (let item of menu.items) {
                 menuPos += item.getHeight(menu.selectedStyle)
-                if (menuPos >= y) break
+                if (menuPos >= yy) break
                 posInMenu++
             }
 
@@ -64,21 +67,23 @@ namespace miniMenu {
         menuCursorX = x // used in the scrollMenu function
         menuCursorY = y
         for (let menu of allMenus()) {
-            if (!menu.buttonEventsEnabled || menu.left > x || menu.right < x) continue
+            let xx = x + ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.X) - (scene.screenWidth() / 2)) // adjust position if not relative to camera
+            let yy = y + ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.Y) - (scene.screenHeight() / 2))
+            if (!menu.buttonEventsEnabled || menu.left > xx || menu.right < xx) continue
 
             let menuPos = menu.top
             menuPos += menu.title ? menu.title.getHeight(menu.titleStyle) : 0
             menuPos += menu.frame ? menu.frame.height / 3 : 0
             menuPos += menu.menuStyle.padding
 
-            if (menuPos > y || menu.bottom < y) continue
+            if (menuPos > yy || menu.bottom < yy) continue
 
             menuPos -= menu.yScroll
 
             let posInMenu = 0
             for (let item of menu.items) {
                 menuPos += item.getHeight(menu.selectedStyle)
-                if (menuPos >= y) break
+                if (menuPos >= yy) break
                 posInMenu++
             }
 

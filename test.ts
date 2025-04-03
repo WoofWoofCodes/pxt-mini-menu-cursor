@@ -41,6 +41,7 @@ function Create_sub_menu(num: number) {
     menu2.setDimensions(80, 50)
     menu2.setTitle("Sub Menu #" + num + ":")
     menu2.setPosition(125, 66)
+    menu2.setFlag(SpriteFlag.RelativeToCamera, true)
     menu2.onButtonPressed(controller.A, function (selection, selectedIndex) {
         menu2.sayText(selectedIndex, 1000, false)
         if (selectedIndex == 0) {
@@ -71,7 +72,6 @@ myMenu = miniMenu.createMenu(
     miniMenu.createMenuItem("11")
 )
 myMenu.setTitle("Works with cursor!")
-myMenu.setFlag(SpriteFlag.RelativeToCamera, true)
 myMenu.setDimensions(114, 70)
 myMenu.setPosition(63, 63)
 myMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
@@ -79,3 +79,6 @@ myMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
     myMenu.setButtonEventsEnabled(false)
     Create_sub_menu(selectedIndex)
 })
+let camera = sprites.create(img`.`)
+scene.cameraFollowSprite(camera)
+controller.moveSprite(camera)
