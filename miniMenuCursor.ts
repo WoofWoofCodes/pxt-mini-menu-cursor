@@ -109,7 +109,12 @@ namespace miniMenu {
     //% weight=2
     export function scrollMenus(dir: MenuScroll) {
         for (let menu of allMenus()) {
-            if (!menu.buttonEventsEnabled || menu.left > menuCursorX || menu.right < menuCursorX || menu.top > menuCursorY || menu.bottom < menuCursorY) continue
+            
+            if (!menu.buttonEventsEnabled || 
+                (menu.left - ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.X) - (scene.screenWidth() / 2)) ) > menuCursorX || 
+                (menu.right - ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.X) - (scene.screenWidth() / 2)) ) < menuCursorX || 
+                (menu.top - ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.Y) - (scene.screenHeight() / 2)) ) > menuCursorY || 
+                (menu.bottom - ((menu.flags & SpriteFlag.RelativeToCamera) ? 0 : scene.cameraProperty(CameraProperty.Y) - (scene.screenHeight() / 2)) ) < menuCursorY) continue
 
             if (menu.selectedIndex + dir < menu.items.length && menu.selectedIndex + dir >= 0) {
                 menu.selectedIndex += dir
