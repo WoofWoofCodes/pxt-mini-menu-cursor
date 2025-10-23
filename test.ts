@@ -71,9 +71,12 @@ myMenu = miniMenu.createMenu(
     miniMenu.createMenuItem("10"),
     miniMenu.createMenuItem("11")
 )
-myMenu.setTitle("Works with cursor!")
-myMenu.setDimensions(114, 70)
-myMenu.setPosition(63, 63)
+myMenu.setTitle(":)")
+myMenu.menuStyle.columns = 1
+myMenu.menuStyle.rows = 0
+
+myMenu.setDimensions(30, 50)
+myMenu.setPosition(75, 40)
 myMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
     myMenu.sayText(selectedIndex, 1000, false)
     myMenu.setButtonEventsEnabled(false)
@@ -82,3 +85,46 @@ myMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
 let camera = sprites.create(img`.`)
 scene.cameraFollowSprite(camera)
 controller.moveSprite(camera)
+
+
+
+let rowMenu = miniMenu.createMenu(
+    miniMenu.createMenuItem("2"),
+    miniMenu.createMenuItem("4"),
+    miniMenu.createMenuItem("6"),
+    miniMenu.createMenuItem("8"),
+    miniMenu.createMenuItem("10"),
+    miniMenu.createMenuItem("12!"),
+)
+rowMenu.menuStyle.columns = 0
+rowMenu.menuStyle.rows = 1
+rowMenu.setTitle("Woah!")
+
+rowMenu.setDimensions(40, 30)
+rowMenu.setPosition(25, 40)
+rowMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
+    rowMenu.sayText(selectedIndex, 1000, false)
+})
+
+let gridMenu = miniMenu.createMenu(
+    miniMenu.createMenuItem("0"),
+    miniMenu.createMenuItem("1"),
+    miniMenu.createMenuItem("2"),
+    miniMenu.createMenuItem("3"),
+    miniMenu.createMenuItem("4"),
+    miniMenu.createMenuItem("5"),
+    miniMenu.createMenuItem("6"),
+    miniMenu.createMenuItem("7"),
+    miniMenu.createMenuItem("8"),
+    miniMenu.createMenuItem("9"),
+    miniMenu.createMenuItem("10"),
+    miniMenu.createMenuItem("11")
+)
+gridMenu.menuStyle.columns = 3
+gridMenu.menuStyle.rows = 3
+
+gridMenu.setDimensions(50, 50)
+gridMenu.setPosition(30, 88)
+gridMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
+    gridMenu.sayText(selectedIndex, 1000, false)
+})
