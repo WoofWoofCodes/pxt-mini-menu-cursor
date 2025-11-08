@@ -47,6 +47,8 @@ namespace miniMenu {
 
             let posInMenu = 0
 
+            let previousPosition = menu.selectedIndex
+
             if (menu.menuStyle.columns == 0 && menu.menuStyle.rows == 1) { // single row left/Right
                 menuPos = menu.left + (menu.frame ? menu.frame.height / 3 : 0) + menu.menuStyle.padding
                 menuPos -= menu.xScroll
@@ -106,6 +108,10 @@ namespace miniMenu {
                 }
             }
 
+            if (menu['itemSelectedHandler'] && menu.selectedIndex != previousPosition) {
+                menu['itemSelectedHandler'](menu.items[menu.selectedIndex].text, menu.selectedIndex)
+            }
+
             /*if (posInMenu >= 0 && posInMenu < menu.items.length) {
                 menu.selectedIndex = posInMenu//(menu.menuStyle.columns > 1) ? (posInMenu * menu.menuStyle.columns) + ((Math.map(xx, menu.left, menu.right, 0, menu.menuStyle.columns)) | 0) : posInMenu
                 if (menu.selectedIndex >= menu.items.length) menu.selectedIndex = menu.items.length - 1
@@ -162,6 +168,9 @@ namespace miniMenu {
 
             if (menu.selectedIndex + dir < menu.items.length && menu.selectedIndex + dir >= 0) {
                 menu.selectedIndex += dir
+                if (menu['itemSelectedHandler']) {
+                    menu['itemSelectedHandler'](menu.items[menu.selectedIndex].text, menu.selectedIndex)
+                }
             }
         }
     }

@@ -123,8 +123,12 @@ let gridMenu = miniMenu.createMenu(
 gridMenu.menuStyle.columns = 3
 gridMenu.menuStyle.rows = 3
 
+gridMenu.onSelectionChanged((s: string, i: number)=>{
+    gridMenu.sayText(i, 1000)
+})
+
 gridMenu.setDimensions(50, 50)
 gridMenu.setPosition(30, 88)
 gridMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
-    gridMenu.sayText(selectedIndex, 1000, false)
+    //gridMenu.sayText(selectedIndex, 1000, false)
 })
