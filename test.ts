@@ -1,4 +1,4 @@
-// Apparently 'right click' on Mac (two finger click on track pad) is actually the wheel button.
+/*// Apparently 'right click' on Mac (two finger click on track pad) is actually the wheel button.
 browserEvents.MouseWheel.onEvent(browserEvents.MouseButtonEvent.Pressed, function (x, y) {
     miniMenu.clickMenuAtPosition(controller.B, x, y)
 })
@@ -131,4 +131,13 @@ gridMenu.setDimensions(50, 50)
 gridMenu.setPosition(30, 88)
 gridMenu.onButtonPressed(controller.A, function (selection, selectedIndex) {
     //gridMenu.sayText(selectedIndex, 1000, false)
+})*/
+let menu = miniMenu.createMenu(miniMenu.createMenuItem("lol")) as miniMenu.MenuSprite
+miniMenu.onButtonPressed(menu, miniMenu.Button.A, (s: string, i: number)=>{
+    game.splash("IT WORKED!!!" + s)
+})
+
+//game.splash(miniMenu.pressButton)
+browserEvents.MouseAny.onEvent(browserEvents.MouseButtonEvent.Pressed, function(x: number, y: number) {
+    miniMenu.clickMenuAtPosition(miniMenu.Button.A, x, y)
 })

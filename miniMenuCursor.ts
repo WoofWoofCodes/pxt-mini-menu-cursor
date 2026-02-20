@@ -127,7 +127,7 @@ namespace miniMenu {
     //% blockId="menu_cursor_click_position"
     //% group="Cursor"
     //% weight=4
-    export function clickMenuAtPosition(button: controller.Button, x: number, y: number) {
+    export function clickMenuAtPosition(button: miniMenu.Button, x: number, y: number) {
         updateMenuPosition(x, y)
         for (let menu of allMenus()) {
             if (!menu.buttonEventsEnabled) continue
@@ -182,8 +182,13 @@ namespace miniMenu {
     //% blockId="menu_cursor_simulate_menu_click"
     //% group="Cursor"
     //% weight=1
-    export function pressMenuButton(menu: MenuSprite, button: controller.Button) {
-        menu.fireButtonEvent(button)
+    export function pressMenuButton(menu: MenuSprite, button: miniMenu.Button) {
+        for (const handler of menu['buttonHandlers']['handlers']) {
+            if (handler.button == button && handler.event == ControllerButtonEvent.Pressed) {
+                handler.handler()
+            }
+        }
+        
     }
 
     /**
